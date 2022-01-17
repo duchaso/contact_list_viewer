@@ -21,3 +21,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_tableWidget_cellDoubleClicked(int row, int column)
+{
+
+    clp->call(ui->tableWidget->item(row, column));
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    clp->switch_view();
+}
+

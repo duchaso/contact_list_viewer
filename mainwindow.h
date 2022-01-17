@@ -17,6 +17,11 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_tableWidget_cellDoubleClicked(int row, int column);
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     ContactListProvider* clp;
