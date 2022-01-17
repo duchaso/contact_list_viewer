@@ -8,6 +8,10 @@
 #include <QDebug>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QIcon>
+#include <QPixmap>
+#include <QBitmap>
+#include <QPainter>
 
 class ContactListProvider
 {
