@@ -16,6 +16,8 @@
 #include <QMessageBox> // for call
 
 #include <QVector>
+#include <QMap>
+#include <QPair>
 
 enum class View
 {
@@ -33,6 +35,9 @@ public:
 public:
     View get_view();
     void set_view(View type);
+    QCheckBox* get_cellWidget(int row, int col);
+    void show_favourites(bool show);
+    void swap_cells(int row_first, int col_first, int row_second, int col_second);
 private:
     QStringList contacts_list;
     QTableWidget* contact_widget;

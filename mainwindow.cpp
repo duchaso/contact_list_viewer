@@ -34,3 +34,23 @@ void MainWindow::on_pushButton_clicked()
     clp->switch_view();
 }
 
+
+void MainWindow::on_checkBox_stateChanged(int arg1)
+{
+    bool checked = arg1;
+    clp->show_favourites(checked);
+}
+
+
+//void MainWindow::on_tableWidget_cellChanged(int row, int column)
+//{
+
+//}
+
+
+//void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
+//{
+//    if(ui->checkBox->isChecked())
+//        ui->tableWidget->insertRow(1);
+//}
+
