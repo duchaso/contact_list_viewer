@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->statusbar->hide();
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableWidget_2->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     QString device = "D:/dev/contact_list_viewer/contact_list_viewer/data/names.txt";
     clp = new ContactListProvider(device, ui->tableWidget);
@@ -60,5 +61,12 @@ void MainWindow::on_lineEdit_cursorPositionChanged(int arg1, int arg2)
     auto str = ui->lineEdit->text();
     //qDebug() << str;
     clp->text_filter(str);
+}
+
+
+void MainWindow::on_tableWidget_2_cellClicked(int row, int column)
+{
+    auto letter = ui->tableWidget_2->item(row, column)->data(Qt::DisplayRole).toString();
+    clp->jump_to(letter);
 }
 

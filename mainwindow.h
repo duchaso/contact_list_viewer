@@ -30,6 +30,8 @@ private slots:
 
     void on_lineEdit_cursorPositionChanged(int arg1, int arg2);
 
+    void on_tableWidget_2_cellClicked(int row, int column);
+
 private:
     Ui::MainWindow *ui;
     ContactListProvider* clp;

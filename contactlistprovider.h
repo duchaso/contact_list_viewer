@@ -39,6 +39,7 @@ public:
     QCheckBox* get_cellWidget(int row, int col);
     void show_favourites(bool show);
     void text_filter(QString text_to_filter);
+    void jump_to(QString letter);
     void swap_cells(int row_first, int col_first, int row_second, int col_second);
 private:
     QStringList contacts_list;

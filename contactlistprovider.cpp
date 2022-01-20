@@ -231,6 +231,16 @@ void ContactListProvider::text_filter(QString str)
     }
 }
 
+void ContactListProvider::jump_to(QString l)
+{
+    auto jump = contact_widget->findItems(l, Qt::MatchStartsWith);
+    if(!jump.isEmpty())
+    {
+        auto first_item = jump.first();
+        contact_widget->setCurrentItem(first_item);
+    }
+}
+
 View ContactListProvider::get_view()
 {
     return type_of_clp;
