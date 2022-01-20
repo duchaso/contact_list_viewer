@@ -54,3 +54,11 @@ void MainWindow::on_checkBox_stateChanged(int arg1)
 //        ui->tableWidget->insertRow(1);
 //}
 
+
+void MainWindow::on_lineEdit_cursorPositionChanged(int arg1, int arg2)
+{
+    auto str = ui->lineEdit->text();
+    //qDebug() << str;
+    clp->text_filter(str);
+}
+

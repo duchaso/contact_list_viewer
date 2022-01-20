@@ -1,8 +1,5 @@
 #include "contactlistprovider.h"
 
-//temp
-#include <QCheckBox>
-
 QPixmap to_circle_icon(const QString& icon)
 {
     QPixmap pix(icon);
@@ -60,8 +57,9 @@ ContactListProvider::ContactListProvider(QString& path_to_device, QTableWidget* 
         widget->setCellWidget(row, 0, cb);//*
         row += 1;
     }
-
-    //contact_widget->hideRow(0);
+    contact_widget->setCurrentItem(nullptr);
+    contact_widget->setWordWrap(true);
+    contact_widget->sortItems(0);
 }
 
 void ContactListProvider::call(const QTableWidgetItem* id)
@@ -123,6 +121,8 @@ void ContactListProvider::switch_view()
         while(!(contact_widget->item(contact_widget->rowCount()-1, 0))) contact_widget->removeRow(contact_widget->rowCount()-1);//////////// check in future
     } else {
         type_of_clp = View::list;
+
+        contact_widget->sortItems(0);
 
         int column_to_add = (contact_widget->columnCount()*contact_widget->rowCount())-contact_widget->rowCount();
         int row_count_old = contact_widget->rowCount();
@@ -190,90 +190,44 @@ void ContactListProvider::show_favourites(bool show)
                 contact_widget->showRow(row);
         }
     } else {
+/******************* grid view favourites not implemented *****************************
+        int row_count = contact_widget->rowCount();
+        int col_count = contact_widget->columnCount();
 
-        int count_emp_items = 0;
-        while(!(contact_widget->item(contact_widget->rowCount()-1, contact_widget->columnCount()-1-count_emp_items)))
-            ++count_emp_items;
-
-        for(int row = 0; row < contact_widget->rowCount(); ++row)
-            for(int col = 0; col < contact_widget->columnCount(); ++col)
+        for(int i = 0; i < row_count*col_count-1; ++i)
+            for(int j = 0; j < row_count*col_count-1-j; ++j)
             {
-                if(!(contact_widget->item(row, col))) continue;
-                auto isFav = static_cast<QCheckBox*>(contact_widget->cellWidget(row, col))->isChecked();
-                if(isFav)
-                {
-                    for(int row_to_swap = row; row_to_swap>0; --row_to_swap)
-                    {
-                        for(int col_to_swap = col; col_to_swap>0; --col_to_swap)
-                            swap_cells(row_to_swap, col_to_swap, row_to_swap, col_to_swap-1);
-                    }
-                }
-                else {
-                    continue;
-                }
+                int row = j/col_count;
+                int column = j%col_count;
+                int next_row = (j+1)/col_count;
+                int next_column = (j+1)%col_count;
+                auto isFav = static_cast<QCheckBox*>(contact_widget->cellWidget(row, column))->isChecked();
+                auto isFav2 = static_cast<QCheckBox*>(contact_widget->cellWidget(next_row, next_column))->isChecked();
+                if(isFav<isFav2)
+                    swap_cells(row, column, next_row, next_column);
             }
+**************************************************************************************/
+    }
+}
 
-
-//        QVector<QPair<QTableWidgetItem*, QCheckBox*>> v;
-//        for(int row = 0; row < contact_widget->rowCount(); ++row)
-//            for(int col = 0; col < contact_widget->columnCount(); ++col)
-//            {
-//                auto cell_widget = get_cellWidget(row, col);
-//                auto item = contact_widget->takeItem(row, col);
-//                QPair<QTableWidgetItem*, QCheckBox*> pair(item, cell_widget);
-//                v.append(pair);
-//            }
-//        if(show)
-//        {
-//            int row = 0;
-//            int col = 0;
-//            for(auto i : v)
-//            {
-//                auto isFav = i.second->isChecked();
-//                if(isFav)
-//                {
-//                    contact_widget->setItem(row, col, i.first);
-//                    contact_widget->setCellWidget(row, col, i.second);
-//                    if(col == 2)
-//                    {
-//                        ++row;
-//                        col = 0;
-//                    } else {
-//                        ++col;
-//                    }
-//                }
-//            }
-//        } else {
-//            auto widg = static_cast<QCheckBox*>(contact_widget->cellWidget(0,0));
-//            auto item = contact_widget->takeItem(0,0);
-//            QPair<QTableWidgetItem*, QCheckBox*> foo(item, widg);
-//            qDebug() << v.indexOf(foo);
-//            contact_widget->clear();
-//            int row = 0;
-//            int col = 0;
-//            for(auto i : v)
-//            {
-//                if(contact_widget->item(row, col))
-//                {
-
-
-//                    auto cb_old = static_cast<QCheckBox*>(contact_widget->cellWidget(row, col));
-//                    auto cb_new = new QCheckBox();
-//                    cb_new->setCheckState(cb_old->checkState());
-//                    contact_widget->takeItem(row, col);
-//                    contact_widget->removeCellWidget(row, col);
-//                }
-//                contact_widget->setItem(row, col, i.first);
-//                contact_widget->setCellWidget(row, col, i.second);
-//                if(col == 2)
-//                {
-//                    ++row;
-//                    col = 0;
-//                } else {
-//                    ++col;
-//                }
-//            }
-//        }
+void ContactListProvider::text_filter(QString str)
+{
+    if(str=="")
+        for(int row = 0; row < contact_widget->rowCount(); ++row)
+            contact_widget->showRow(row);
+    else {
+        for(int row = 0; row < contact_widget->rowCount(); ++row)
+            contact_widget->hideRow(row);
+        auto finded_items = contact_widget->findItems(str, Qt::MatchContains);
+        QTableWidgetItem* i = nullptr;
+        foreach(i, finded_items)
+        {
+            auto row = contact_widget->row(i);
+            if(row >= 0)
+            {
+                contact_widget->showRow(row);
+            }
+        }
     }
 }
 

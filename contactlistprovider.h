@@ -14,6 +14,7 @@
 #include <QBitmap> // for icon
 #include <QPainter> // for icon
 #include <QMessageBox> // for call
+#include <QCheckBox> // for favourites
 
 #include <QVector>
 #include <QMap>
@@ -37,6 +38,7 @@ public:
     void set_view(View type);
     QCheckBox* get_cellWidget(int row, int col);
     void show_favourites(bool show);
+    void text_filter(QString text_to_filter);
     void swap_cells(int row_first, int col_first, int row_second, int col_second);
 private:
     QStringList contacts_list;

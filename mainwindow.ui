@@ -48,9 +48,9 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>39</y>
+      <y>59</y>
       <width>430</width>
-      <height>561</height>
+      <height>541</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -142,6 +142,16 @@
     </property>
     <property name="text">
      <string>Favourites</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>211</width>
+      <height>24</height>
+     </rect>
     </property>
    </widget>
   </widget>

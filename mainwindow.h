@@ -28,6 +28,8 @@ private slots:
 
 //    void on_tableWidget_itemChanged(QTableWidgetItem *item);
 
+    void on_lineEdit_cursorPositionChanged(int arg1, int arg2);
+
 private:
     Ui::MainWindow *ui;
     ContactListProvider* clp;
