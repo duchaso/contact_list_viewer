@@ -1,25 +1,27 @@
 #ifndef CONTACTLISTPROVIDER_H
 #define CONTACTLISTPROVIDER_H
-
+//for working with text
 #include <QString>
 #include <QStringList>
 #include <QTextStream>
 #include <QFile>
+//for debug
 #include <QDebug>
+//for table
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QHeaderView>
-#include <QIcon> // for icon
-#include <QPixmap> // for icon
-#include <QBitmap> // for icon
-#include <QPainter> // for icon
-#include <QMessageBox> // for call
-#include <QCheckBox> // for favourites
+//for icon
+#include <QIcon>
+#include <QPixmap>
+#include <QBitmap>
+#include <QPainter>
+//for call function
+#include <QMessageBox>
+//for favourites
+#include <QCheckBox>
 
-#include <QVector>
-#include <QMap>
-#include <QPair>
-
+//enumeration for view of table
 enum class View
 {
     list,
@@ -31,16 +33,16 @@ class ContactListProvider
 public:
     ContactListProvider(QString& device, QTableWidget* main_table_widget);
 public:
-    void call(const QTableWidgetItem* id);
-    void switch_view();
-public:
     View get_view();
     void set_view(View type);
     QCheckBox* get_cellWidget(int row, int col);
+    void swap_cells(int row_first, int col_first, int row_second, int col_second);
+public:
+    void switch_view();
+    void call(const QTableWidgetItem* id);
     void show_favourites(bool show);
     void text_filter(QString text_to_filter);
     void jump_to(QString letter);
-    void swap_cells(int row_first, int col_first, int row_second, int col_second);
 private:
     QStringList contacts_list;
     QTableWidget* contact_widget;

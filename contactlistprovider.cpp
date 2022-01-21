@@ -20,6 +20,7 @@ QPixmap to_circle_icon(const QString& icon)
 ContactListProvider::ContactListProvider(QString& path_to_device, QTableWidget* widget)
     : contact_widget(widget), type_of_clp(View::list)
 {
+    //read contact list from file aka device
     QFile file(path_to_device);
     QString errMsg;
     QFileDevice::FileError err = QFileDevice::NoError;
@@ -36,6 +37,7 @@ ContactListProvider::ContactListProvider(QString& path_to_device, QTableWidget* 
         contacts_list.append(in.readLine());
     }
 
+    //set circle contact pic for contacts
     auto color = QColor(0,97,109);
     auto brush = QBrush(color);
 
@@ -44,22 +46,23 @@ ContactListProvider::ContactListProvider(QString& path_to_device, QTableWidget* 
 
     widget->setIconSize(QSize(50,50));
     int row{0};
+    //add contacts and their photos to the table
     while(!contacts_list.isEmpty())
     {
         auto contact = contacts_list.takeLast();
         QTableWidgetItem* i = new QTableWidgetItem(contact);
-        QCheckBox* cb = new QCheckBox();//*
+        QCheckBox* cb = new QCheckBox();//create favourite checkbox for each contact in the table
         i->setBackground(brush);
         i->setTextAlignment(Qt::AlignCenter);
         i->setIcon(icon);
         widget->insertRow(row);
         widget->setItem(row, 0, i);
-        widget->setCellWidget(row, 0, cb);//*
+        widget->setCellWidget(row, 0, cb);//set favourite checkbox for each contact in the table
         row += 1;
     }
-    contact_widget->setCurrentItem(nullptr);
+    contact_widget->setCurrentItem(nullptr);//turn off first item selection
     contact_widget->setWordWrap(true);
-    contact_widget->sortItems(0);
+    contact_widget->sortItems(0);//sort our table
 }
 
 void ContactListProvider::call(const QTableWidgetItem* id)
@@ -89,13 +92,14 @@ void ContactListProvider::switch_view()
 {
     if(type_of_clp == View::list)
     {
+        //from list to grid view
         type_of_clp = View::grid;
-
+        //add column(3 in our case) and resize them
         for(int i = 1; i < 3; ++i)
             contact_widget->insertColumn(i);
         for(int i = 0; i < 3; ++i)
             contact_widget->horizontalHeader()->resizeSection(i, 137);
-
+        //transform our 1-column list to 3-column grid
         int row = 0;
         int col = 0;
         for(int i = 0; i < contact_widget->rowCount(); ++i)
@@ -114,23 +118,26 @@ void ContactListProvider::switch_view()
                 ++col;
             }
         }
+        //remove extra row after transform
         for(int i = contact_widget->rowCount(); i > row; --i)
         {
             contact_widget->removeRow(i);
         }
-        while(!(contact_widget->item(contact_widget->rowCount()-1, 0))) contact_widget->removeRow(contact_widget->rowCount()-1);//////////// check in future
+        //remove row if doesn't contain any data
+        while(!(contact_widget->item(contact_widget->rowCount()-1, 0))) contact_widget->removeRow(contact_widget->rowCount()-1);
     } else {
+        //from grid to list view
         type_of_clp = View::list;
-
+        //sort items
         contact_widget->sortItems(0);
-
+        //add extra column
         int column_to_add = (contact_widget->columnCount()*contact_widget->rowCount())-contact_widget->rowCount();
         int row_count_old = contact_widget->rowCount();
         for(int i = row_count_old; i < row_count_old+column_to_add; ++i)
         {
             contact_widget->insertRow(i);
         }
-
+        //transform our 3-column grid to 1-column list
         int row_to_set = contact_widget->rowCount()-1;
         for(int row = row_count_old-1; row >= 0; --row)
             for(int col = contact_widget->columnCount()-1; col >= 0; --col)
@@ -150,12 +157,14 @@ void ContactListProvider::switch_view()
             }
 
         while(!(contact_widget->item(contact_widget->rowCount()-1, 0))) contact_widget->removeRow(contact_widget->rowCount()-1);//delete empty row from end
+        //remove 2th and 3th column from grid view for list
         contact_widget->removeColumn(1);
         contact_widget->removeColumn(1);
+        //resize column to fit the window
         contact_widget->horizontalHeader()->resizeSection(0, 415);
     }
 }
-
+//utility function for swapping two cells
 void ContactListProvider::swap_cells(int row_f, int col_f, int row_s, int col_s)
 {
     auto cell_widget1 = get_cellWidget(row_f, col_f);
@@ -175,8 +184,11 @@ void ContactListProvider::show_favourites(bool show)
 {
     if(type_of_clp == View::list)
     {
+        //show favourites in list view
+        //hide row if favourite checkbox is not checked and vice versa
         if(show)
         {
+            //for hiding
             int row_count = contact_widget->rowCount();
             for(int row = 0; row < row_count; ++row)
             {
@@ -186,6 +198,7 @@ void ContactListProvider::show_favourites(bool show)
             }
             contact_widget->sortItems(0);
         } else {
+            //for showing
             for(int row = 0; row < contact_widget->rowCount(); ++row)
                 contact_widget->showRow(row);
         }
@@ -212,14 +225,17 @@ void ContactListProvider::show_favourites(bool show)
 
 void ContactListProvider::text_filter(QString str)
 {
+    //catching empty string and unhide all rows
     if(str=="")
         for(int row = 0; row < contact_widget->rowCount(); ++row)
             contact_widget->showRow(row);
     else {
+        //hide all rows
         for(int row = 0; row < contact_widget->rowCount(); ++row)
             contact_widget->hideRow(row);
         auto finded_items = contact_widget->findItems(str, Qt::MatchContains);
         QTableWidgetItem* i = nullptr;
+        //then if table contains text show this row
         foreach(i, finded_items)
         {
             auto row = contact_widget->row(i);
@@ -231,7 +247,7 @@ void ContactListProvider::text_filter(QString str)
     }
 }
 
-void ContactListProvider::jump_to(QString l)
+void ContactListProvider::jump_to(QString l)//alphabetical jump
 {
     auto jump = contact_widget->findItems(l, Qt::MatchStartsWith);
     if(!jump.isEmpty())

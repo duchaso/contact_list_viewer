@@ -24,10 +24,6 @@ private slots:
 
     void on_checkBox_stateChanged(int arg1);
 
-//    void on_tableWidget_cellChanged(int row, int column);
-
-//    void on_tableWidget_itemChanged(QTableWidgetItem *item);
-
     void on_lineEdit_cursorPositionChanged(int arg1, int arg2);
 
     void on_tableWidget_2_cellClicked(int row, int column);

@@ -22,48 +22,34 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+//for calling function
 void MainWindow::on_tableWidget_cellDoubleClicked(int row, int column)
 {
 
     clp->call(ui->tableWidget->item(row, column));
 }
 
-
+//for switching view of table
 void MainWindow::on_pushButton_clicked()
 {
     clp->switch_view();
 }
 
-
+//for favourites
 void MainWindow::on_checkBox_stateChanged(int arg1)
 {
     bool checked = arg1;
     clp->show_favourites(checked);
 }
 
-
-//void MainWindow::on_tableWidget_cellChanged(int row, int column)
-//{
-
-//}
-
-
-//void MainWindow::on_tableWidget_itemChanged(QTableWidgetItem *item)
-//{
-//    if(ui->checkBox->isChecked())
-//        ui->tableWidget->insertRow(1);
-//}
-
-
+//for filtering contacts
 void MainWindow::on_lineEdit_cursorPositionChanged(int arg1, int arg2)
 {
     auto str = ui->lineEdit->text();
-    //qDebug() << str;
     clp->text_filter(str);
 }
 
-
+//for alphabetical jump
 void MainWindow::on_tableWidget_2_cellClicked(int row, int column)
 {
     auto letter = ui->tableWidget_2->item(row, column)->data(Qt::DisplayRole).toString();
